@@ -19,4 +19,4 @@ python shade_correction_sim.py     # numpy + scipy, about 90 s; writes results.t
 
 **What it is not**: a forecast of real plant numbers. It contains no human baseline and no image processing. The physics is deliberately simple. Real numbers come from the client's tiles in Phase 0.
 
-Results are summarised in Appendix A of `../case-study.md`.
+Full output of the last run is in `results.txt`.

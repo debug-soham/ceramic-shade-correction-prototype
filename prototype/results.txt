@@ -1,0 +1,55 @@
+==============================================================================
+Shade-correction prototype, synthetic data. Tolerance: every spot dE00 <= 1.0
+==============================================================================
+
+Worked example (one synthetic SKU, four measured spots)
+
+First production sample vs master, before any correction:
+  spot            dL     da     db   dE00
+  background    0.53  -0.45  -0.38   0.68
+  mid vein     -1.67  -0.48  -1.48   1.77
+  dark vein    -2.20  -0.22  -0.89   2.20
+  accent       -1.95  -0.25  -0.58   1.72
+
+Recommended change to the print file (per channel, relative):
+  blue -9.4%, brown -3.4%, beige +17.8%, yellow +2.5%, pink +6.0%, black -28.1%
+Variants to print in round 1: 100%, 60% and 140% of that change.
+
+Round 1 result (measured):
+  100% of change: max dE00 = 0.71, mean dE00 = 0.43
+   60% of change: max dE00 = 0.88, mean dE00 = 0.62
+  140% of change: max dE00 = 1.21, mean dE00 = 0.70
+
+Approved after 1 correction round(s); final per-spot dE00 = 0.31, 0.40, 0.32, 0.71
+
+Firing repeatability at default noise: same file, two tiles -> max-spot dE00 median 0.33, P90 0.52
+
+1) Strategy comparison (batches that start out of tolerance, n=200 each)
+   strategy                                             <=1 rnd <=2 rnd  >4 rnd  mean
+   Stale sensitivity model, 1 variant per round             72%     84%     10%  1.65
+   Stale sensitivity model, 3 variants per round            80%     90%      8%  1.46
+   Perfect model of today's kiln, 1 variant (bound)         80%     90%      8%  1.47
+   Stale model, 3 variants, tone curve per channel          82%     92%      4%  1.33
+   Starting error of these batches: max-spot dE00 median 2.00, P90 2.86
+   Round-1 prediction error (predicted vs measured Lab), median dE00: 0.37
+   After approval under D65, mismatch under incandescent A: median 0.64, P90 1.00, share > 1.0: 10%
+
+2) How stale can the sensitivity model be? (3 variants per round)
+   drift of model vs today                              <=1 rnd <=2 rnd  >4 rnd
+   0x a typical day-to-day drift                            80%     90%      8%
+   1x a typical day-to-day drift                            84%     92%      6%
+   2x a typical day-to-day drift                            78%     92%      6%
+   3x a typical day-to-day drift                            68%     86%      8%
+
+3) Noise floor: firing repeatability decides whether any file correction can work
+   tile-to-tile variation     repeat dE00 (med/P90) <=1 rnd <=2 rnd  >4 rnd
+   0.5x default                         0.28 / 0.40     80%     90%      6%
+   1.0x default                         0.33 / 0.52     84%     92%      6%
+   2.0x default                         0.46 / 0.86     72%     90%      8%
+   3.0x default                         0.58 / 1.25     72%     90%      8%
+   4.0x default                         0.72 / 1.65     50%     79%     12%
+
+4) Can a whole-file edit fix a multi-colour pattern at all? (perfect knowledge, no noise)
+   flat % per channel (6 numbers)         best max-spot dE00 median 0.52, P90 1.01; cannot reach 1.0: 11%
+   tone curve per channel (12 numbers)    best max-spot dE00 median 0.31, P90 0.69; cannot reach 1.0: 5%
+
